@@ -24,7 +24,7 @@ Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applicat
 
     1. Click ["Clients"](http://localhost:3333/auth/admin/master/console/#/realms/master/clients) on the sidebar and click on the "Create" button. Let's call it `MySecureApp`.
     2. In the client parameters :
-       1. Add a "Valid Redirect URI" to your app : `http://localhost:3002/*` (don't forget clicking "+" button to add the URL, then "Save" button)
+       1. Add a "Valid Redirect URI" to your app : `http://172.17.0.1:3002/*` (don't forget clicking "+" button to add the URL, then "Save" button)
        2. Set the "Access type" to `confidential`
     3. In the "Credentials" tab, retrieve the "Secret" and **set `KEYCLOAK_SECRET` in your `.env`** file
 
@@ -36,7 +36,7 @@ Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applicat
 docker-compose up -d nginx app_1
 ```
 
-You can now visit `http://localhost:3002` to validate the configuration.
+You can now visit `http://172.17.0.1:3002` to validate the configuration.
 
 ## Credits
 

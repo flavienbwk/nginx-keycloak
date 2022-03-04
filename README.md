@@ -1,6 +1,6 @@
 # Nginx Keycloak
 
-Set an NGINX reverse proxy with Keycloak SSO in front of your web applications
+Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applications.
 
 ## Getting started
 

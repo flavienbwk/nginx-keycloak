@@ -5,37 +5,37 @@ upstream app_a {
 server {
     listen   3002;
     root     /opt/nginx/html;
-    resolver 127.0.0.11  valid=1s    ipv6=off;
+    resolver 127.0.0.11 valid=1s ipv6=off;
     
     access_by_lua '
         local opts = {
-        redirect_uri_path = "/redirect_uri",
-        accept_none_alg = true,
-        discovery = "http://host.docker.internal:3333/auth/realms/myrealm/.well-known/openid-configuration",
-        client_id = "${KEYCLOAK_CLIENT}",
-        client_secret = "${KEYCLOAK_SECRET}",
-        redirect_uri_scheme = "http",
-        logout_path = "/logout",
-        redirect_after_logout_uri = "http://host.docker.internal:3333/auth/realms/myrealm/protocol/openid-connect/logout?redirect_uri=http://localhost/",
-        redirect_after_logout_with_id_token_hint = false,
-        session_contents = {id_token=true}
+            redirect_uri_path = "/redirect_uri",
+            accept_none_alg = true,
+            discovery = "${KEYCLOAK_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/.well-known/openid-configuration",
+            client_id = "${KEYCLOAK_CLIENT}",
+            client_secret = "${KEYCLOAK_SECRET}",
+            logout_path = "/logout",
+            redirect_after_logout_uri = "${KEYCLOAK_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri=http://localhost:3002/",
+            redirect_after_logout_with_id_token_hint = false,
+            scope = "openid",
+            session_contents = {id_token=true}
         }
         -- call introspect for OAuth 2.0 Bearer Access Token validation
         local res, err = require("resty.openidc").authenticate(opts)
         if err then
-        ngx.status = 403
-        ngx.say(err)
-        ngx.exit(ngx.HTTP_FORBIDDEN)
+            ngx.status = 403
+            ngx.say(err)
+            ngx.exit(ngx.HTTP_FORBIDDEN)
         end
     ';
 
     # I disabled caching so the browser won't cache the site.
     expires           0;
-    add_header        Cache-Control private;    
+    add_header        Cache-Control private;
 
     location / {
         proxy_pass http://app_a;
-        proxy_set_header X-Forwarded-For \$remote_addr;
+        proxy_set_header X-Forwarded-For \\$remote_addr; 
     }    
     
     # redirect server error pages to the static page /40x.html

@@ -12,6 +12,8 @@ services:
         volumes: 
             - ./nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
         environment:
+            KEYCLOAK_ENDPOINT: ${KEYCLOAK_ENDPOINT}
+            KEYCLOAK_REALM: ${KEYCLOAK_REALM}
             KEYCLOAK_CLIENT: ${KEYCLOAK_CLIENT}
             KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}
 
@@ -44,6 +46,8 @@ services:
 
     app_1:
         image: nginx:1.21.6
+        ports:
+            - 3003:80
 
 volumes:
     postgres_data:

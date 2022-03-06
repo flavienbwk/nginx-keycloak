@@ -63,7 +63,7 @@ Now we want to attribute this role to our user.
 
 In our [docker-compose](./docker-compose.yml) configuration, edit the NGINX configuration mount point to be `./nginx-roles.conf.template` instead of `./nginx.conf.template`.
 
-:information_source: If you want to name your role differently, you can edit the expected name in `./nginx-roles.conf.template` in the `string.find(res.id_token.roles, "application:role:NginxApps-App1")` line.
+:information_source: If you want to name your role differently, you can edit the expected name in `./nginx-roles.conf.template` in the `contains(client_roles, "NginxApps-App1")` line.
 
 Start NGINX and the app :
 

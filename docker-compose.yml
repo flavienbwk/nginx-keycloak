@@ -10,9 +10,11 @@ services:
         ports:
             - 3002:3002
         volumes: 
+            - ./logs:/var/log/nginx
             - ./nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
         environment:
             KEYCLOAK_ENDPOINT: ${KEYCLOAK_ENDPOINT}
+            KEYCLOAK_LOGOUT_REDIRECT_URI: ${KEYCLOAK_LOGOUT_REDIRECT_URI}
             KEYCLOAK_REALM: ${KEYCLOAK_REALM}
             KEYCLOAK_CLIENT: ${KEYCLOAK_CLIENT}
             KEYCLOAK_SECRET: ${KEYCLOAK_SECRET}

@@ -7,4 +7,5 @@ jobs:
       - checkout
       - run: |
           apk add docker-compose
+          cp .env.example .env
           docker-compose build

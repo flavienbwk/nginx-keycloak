@@ -27,6 +27,13 @@ server {
             end
         end
 
+        local function contains(list, x)
+            for _, v in pairs(list) do
+                if v == x then return true end
+            end
+            return false
+        end
+
         local opts = {
             redirect_uri = "/redirect_uri",
             accept_none_alg = false,
@@ -38,15 +45,37 @@ server {
             redirect_after_logout_uri = "${KEYCLOAK_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri=${KEYCLOAK_LOGOUT_REDIRECT_URI}",
             redirect_after_logout_with_id_token_hint = false,
             scope = "openid",
-            session_contents = {id_token=true}
+            session_contents = {id_token=true, access_token=true}
         }
         
-        local res, err = require("resty.openidc").authenticate(opts)
+        local res, err, target_url, session = require("resty.openidc").authenticate(opts)
         if err then
             ngx.status = 403
             ngx.log(ngx.NOTICE, dump(err))
             ngx.exit(ngx.HTTP_FORBIDDEN)
         end
+
+        local access_token, err = require("resty.openidc").access_token(opts, session)
+        local parsed_token, token_err = require("resty.openidc").jwt_verify(res.access_token, opts)
+
+        if	(parsed_token.resource_access == nil or parsed_token.resource_access.${KEYCLOAK_CLIENT} == nil) then
+            ngx.status = 403
+			ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User has no role, therefore access was denied")
+			ngx.exit(ngx.HTTP_FORBIDDEN)
+		end
+
+        client_roles = parsed_token.resource_access.${KEYCLOAK_CLIENT}.roles
+        if	(client_roles == nil) then
+            ngx.status = 403
+			ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User has no role for client ${KEYCLOAK_CLIENT}, therefore denied access")
+			ngx.exit(ngx.HTTP_FORBIDDEN)
+		end
+        
+		if not contains(client_roles, "NginxApps-App1") then
+            ngx.status = 403
+			ngx.log(ngx.NOTICE, res.id_token.preferred_username .. " - User got an access denied")
+			ngx.exit(ngx.HTTP_FORBIDDEN)
+		end
     ';
 
     # I disabled caching so the browser won't cache the site.

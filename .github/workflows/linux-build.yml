@@ -25,6 +25,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
             
-      - name: Build
+      - name: Docker-compose build
         run: |
           docker-compose build

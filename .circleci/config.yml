@@ -5,7 +5,15 @@ jobs:
       - image: docker:20.10.12-dind
     steps:
       - checkout
-      - run: |
-          apk add docker-compose
-          cp .env.example .env
-          docker-compose build
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --no-cache \
+              py-pip
+            pip install \
+              docker-compose
+      - run:
+          name: Build
+          command: |
+            cp .env.example .env
+            docker-compose build

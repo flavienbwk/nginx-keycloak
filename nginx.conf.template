@@ -31,11 +31,21 @@ server {
             redirect_uri = "/redirect_uri",
             accept_none_alg = false,
 			renew_access_token_on_expiry = true,
-            discovery = "${KEYCLOAK_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/.well-known/openid-configuration",
+            discovery = { -- Overwriting auto-discovery [parameters](http://localhost:3333/auth/realms/master/.well-known/openid-configuration)
+                issuer = "${KEYCLOAK_EXTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}",
+                authorization_endpoint = "${KEYCLOAK_EXTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/auth",
+                token_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token",
+                jwks_uri = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs",
+                userinfo_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/userinfo",
+                revocation_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/revoke",
+                end_session_endpoint = "${KEYCLOAK_EXTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout",
+                introspection_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token/introspect",
+            },
+            token_endpoint_auth_method = "client_secret_basic", -- Recommended over [client_secret_post](https://stackoverflow.com/a/55040462/4958081)
             client_id = "${KEYCLOAK_CLIENT}",
             client_secret = "${KEYCLOAK_SECRET}",
             logout_path = "/logout",
-            redirect_after_logout_uri = "${KEYCLOAK_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri=${KEYCLOAK_LOGOUT_REDIRECT_URI}",
+            redirect_after_logout_uri = "${KEYCLOAK_EXTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/logout?redirect_uri=${KEYCLOAK_LOGOUT_REDIRECT_URI}",
             redirect_after_logout_with_id_token_hint = false,
             scope = "openid",
             session_contents = {id_token=true}

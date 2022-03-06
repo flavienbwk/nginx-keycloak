@@ -13,7 +13,8 @@ services:
             - ./logs:/var/log/nginx
             - ./nginx.conf.template:/etc/nginx/conf.d/nginx.conf.template
         environment:
-            KEYCLOAK_ENDPOINT: ${KEYCLOAK_ENDPOINT}
+            KEYCLOAK_INTERNAL_ENDPOINT: ${KEYCLOAK_INTERNAL_ENDPOINT}
+            KEYCLOAK_EXTERNAL_ENDPOINT: ${KEYCLOAK_EXTERNAL_ENDPOINT}
             KEYCLOAK_LOGOUT_REDIRECT_URI: ${KEYCLOAK_LOGOUT_REDIRECT_URI}
             KEYCLOAK_REALM: ${KEYCLOAK_REALM}
             KEYCLOAK_CLIENT: ${KEYCLOAK_CLIENT}

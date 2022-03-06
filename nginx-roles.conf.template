@@ -37,10 +37,12 @@ server {
         local opts = {
             redirect_uri = "/redirect_uri",
             accept_none_alg = false,
-			renew_access_token_on_expiry = true,
+            renew_access_token_on_expiry = true,
             discovery = { -- Overwriting auto-discovery [parameters](http://localhost:3333/auth/realms/master/.well-known/openid-configuration)
                 issuer = "${KEYCLOAK_EXTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}",
                 authorization_endpoint = "${KEYCLOAK_EXTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/auth",
+                id_token_signing_alg_values_supported = { "RS256", "RS384", "RS512" },
+                token_signing_alg_values_expected = { "RS256", "RS384", "RS512" },
                 token_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token",
                 jwks_uri = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs",
                 userinfo_endpoint = "${KEYCLOAK_INTERNAL_ENDPOINT}/auth/realms/${KEYCLOAK_REALM}/protocol/openid-connect/userinfo",

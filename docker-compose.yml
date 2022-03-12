@@ -28,8 +28,6 @@ services:
             POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        ports:
-            - 5432:5432
             
     keycloak:
         image: jboss/keycloak:15.1.1
@@ -42,6 +40,7 @@ services:
             DB_PASSWORD: ${POSTGRES_PASSWORD}
             KEYCLOAK_USER: ${KEYCLOAK_USER}
             KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
+            KEYCLOAK_FRONTEND_URL: ${KEYCLOAK_EXTERNAL_ENDPOINT}/auth
         ports:
             - 3333:8080
         depends_on:

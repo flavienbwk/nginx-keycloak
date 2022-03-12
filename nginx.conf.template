@@ -61,7 +61,7 @@ server {
         end
     ';
 
-    # I disabled caching so the browser won't cache the site.
+    # Disabling cache so the browser won't cache the website
     expires           0;
     add_header        Cache-Control private;
 
@@ -70,14 +70,10 @@ server {
         proxy_set_header X-Forwarded-For \\$remote_addr; 
     }    
     
-    # redirect server error pages to the static page /40x.html
-    #
     error_page 404 /404.html;
         location = /40x.html {
     }
 
-    # redirect server error pages to the static page /50x.html
-    #
     error_page 500 502 503 504 /50x.html;
         location = /50x.html {
         root /usr/share/nginx/html;

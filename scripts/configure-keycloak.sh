@@ -135,7 +135,37 @@ assign_role_to_user() {
 }
 
 
+# Wait for Keycloak server to start
+wait_for_keycloak() {
+    echo "Waiting for Keycloak server to start..."
+    start_time=$(date +%s)
+    timeout=120
+
+    while true; do
+        if curl -s -o /dev/null -w "%{http_code}" "${KEYCLOAK_URL}/health" | grep -q "200"; then
+            echo "Keycloak server is up and running."
+            return 0
+        fi
+
+        current_time=$(date +%s)
+        elapsed=$((current_time - start_time))
+
+        if [ $elapsed -ge $timeout ]; then
+            echo "Timeout: Keycloak server did not start within ${timeout} seconds."
+            return 1
+        fi
+
+        echo "Still waiting for Keycloak server to start... (${elapsed} seconds elapsed)"
+        sleep 5
+    done
+}
+
+
 # Execute functions
+if ! wait_for_keycloak; then
+    echo "Failed to start Keycloak server. Exiting."
+    exit 1
+fi
 create_client
 KEYCLOAK_SECRET=$(get_client_secret)
 echo "KEYCLOAK_SECRET=${KEYCLOAK_SECRET}" >> .env

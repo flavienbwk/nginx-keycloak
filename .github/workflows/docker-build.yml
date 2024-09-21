@@ -18,6 +18,7 @@ jobs:
           docker compose build
       
       - name: Log in to GitHub Container Registry
+        if: github.ref == 'refs/heads/main'
         uses: docker/login-action@v1
         with:
           registry: ghcr.io

@@ -1,6 +1,7 @@
 # Nginx Keycloak
 
 [![Docker build](https://github.com/flavienbwk/nginx-keycloak/actions/workflows/linux-build.yml/badge.svg)](https://github.com/flavienbwk/nginx-keycloak/actions/workflows/linux-build.yml)
+[![Test](https://github.com/flavienbwk/nginx-keycloak/actions/workflows/test-keycloak-setup.yml/badge.svg)](https://github.com/flavienbwk/nginx-keycloak/actions/workflows/test-keycloak-setup.yml)
 
 Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applications.
 

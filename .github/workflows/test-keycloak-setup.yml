@@ -19,7 +19,7 @@ jobs:
             
       - name: docker compose start
         run: |
-          docker compose up -d keycloak
+          docker compose up -d
             
       - name: Setup nginx-keycloak
         run: |

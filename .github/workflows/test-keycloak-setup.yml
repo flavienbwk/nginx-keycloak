@@ -19,7 +19,7 @@ jobs:
             
       - name: docker compose start
         run: |
-          docker compose up -d
+          docker compose up -d postgres keycloak
             
       - name: Setup nginx-keycloak
         run: |

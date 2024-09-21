@@ -17,7 +17,7 @@ Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applicat
 2. Start Keycloak
 
     ```bash
-    docker-compose up -d keycloak
+    docker compose up -d keycloak
     ```
 
 3. Go to `http://localhost:3333` and login with your credentials
@@ -32,6 +32,8 @@ Setting NGINX as a reverse proxy with Keycloak SSO in front of your web applicat
 
 5. Go to ["Users"](http://localhost:3333/auth/admin/master/console/#/realms/master/users) in the sidebar and create one. Edit its password in the "Credentials" tab.
 
+6. (optional) Edit max token lifespan going to "Realm settings" > "SSO Session Max" and set the desired time before the user token expires.
+
 ### Simple user authentication
 
 With this method, being a registered user is sufficient to access your apps.
@@ -39,7 +41,7 @@ With this method, being a registered user is sufficient to access your apps.
 If you choose this method, you're already set. Just run :
 
 ```bash
-docker-compose up -d nginx app_1
+docker compose up -d nginx app_1
 ```
 
 You can now visit `http://localhost:3002` to validate the configuration.
@@ -61,14 +63,14 @@ Now we want to attribute this role to our user.
 3. Go to the "Role Mappings" tab
 4. Select the "Client Roles" `NginxApps` and assign the `NginxApps-App1` role by selecting it and clicking "Add selected"
 
-In our [docker-compose](./docker-compose.yml) configuration, edit the NGINX configuration mount point to be `./nginx-roles.conf.template` instead of `./nginx.conf.template`.
+In our [docker compose](./docker compose.yml) configuration, edit the NGINX configuration mount point to be `./nginx-roles.conf.template` instead of `./nginx.conf.template`.
 
 :information_source: If you want to name your role differently, you can edit the expected name in `./nginx-roles.conf.template` in the `contains(client_roles, "NginxApps-App1")` line.
 
 Start NGINX and the app :
 
 ```bash
-docker-compose up -d nginx app_1
+docker compose up -d nginx app_1
 ```
 
 You can now visit `http://localhost:3002` to validate the configuration.

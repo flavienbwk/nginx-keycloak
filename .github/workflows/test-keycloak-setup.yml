@@ -1,0 +1,31 @@
+name: Test Keycloak configuration
+
+on: [push]
+
+jobs:
+
+  test-keycloak-setup:
+    name: Ubuntu 22.04 test of nginx-keycloak
+    runs-on: ubuntu-22.04
+
+    steps:
+    
+      - name: Check Out Repo 
+        uses: actions/checkout@v2
+            
+      - name: docker compose build
+        run: |
+          docker compose build
+            
+      - name: docker compose start
+        run: |
+          docker compose up -d keycloak
+            
+      - name: Setup nginx-keycloak
+        run: |
+          cp .env.example .env
+          bash ./scripts/configure-keycloak.sh
+            
+      - name: docker compose down
+        run: |
+          docker compose down

@@ -5,8 +5,8 @@ on: [push]
 jobs:
 
   build-linux:
-    name: Ubuntu 20.04 build of nginx-keycloak
-    runs-on: ubuntu-20.04
+    name: Ubuntu 22.04 build of nginx-keycloak
+    runs-on: ubuntu-22.04
 
     steps:
     

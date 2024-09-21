@@ -36,9 +36,6 @@ get_admin_token() {
         -d "client_id=${CLIENT_ID}" | jq -r '.access_token'
 }
 
-# Get admin token
-TOKEN=$(get_admin_token)
-
 # Create client if it doesn't exist
 create_client() {
     if ! curl -s -X GET "${KEYCLOAK_URL}/admin/realms/${REALM}/clients?clientId=${NEW_CLIENT_ID}" \
@@ -142,7 +139,7 @@ wait_for_keycloak() {
     timeout=120
 
     while true; do
-        if curl -s -o /dev/null -w "%{http_code}" "${KEYCLOAK_URL}/health" | grep -q "200"; then
+        if curl -sL -o /dev/null -w "%{http_code}" "${KEYCLOAK_URL}" | grep -q "200"; then
             echo "Keycloak server is up and running."
             return 0
         fi
@@ -166,6 +163,10 @@ if ! wait_for_keycloak; then
     echo "Failed to start Keycloak server. Exiting."
     exit 1
 fi
+
+# Get admin token
+TOKEN=$(get_admin_token)
+
 create_client
 KEYCLOAK_SECRET=$(get_client_secret)
 echo "KEYCLOAK_SECRET=${KEYCLOAK_SECRET}" >> .env
